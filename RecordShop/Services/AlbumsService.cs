@@ -7,6 +7,7 @@ namespace RecordShop.Services
     {
         public IEnumerable<Album> GetAllAlbums();
         public Album GetAlbumById(int albumId);
+        public Album AddNewAlbum(Album newAlbum);
     }
 
     public class AlbumsService : IAlbumsService
@@ -23,6 +24,10 @@ namespace RecordShop.Services
         public Album GetAlbumById(int albumId) 
         { 
             return _albumsRepository.GetAlbumById(albumId);
+        }
+        public Album AddNewAlbum(Album newAlbum) 
+        {
+            return _albumsRepository.AddNewAlbum(newAlbum);
         }
     }
 }

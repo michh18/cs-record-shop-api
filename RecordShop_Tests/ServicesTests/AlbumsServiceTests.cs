@@ -27,21 +27,23 @@ namespace RecordShop_Tests.ServiceTests
             };
         }
 
+        // -------------------------- GetAllAlbums Tests --------------------------------
         [Test]
         public void GetAllAlbums_ReturnsAllAlbums()
         {
             _albumRepositoryMock.Setup(r => r.GetAllAlbums()).Returns(_albums);
 
             var result = _albumService.GetAllAlbums();
+
             Assert.That(result, Is.EqualTo(_albums));
         }
-
         [Test]
         public void GetAllAlbums_ReturnsEmptyList_WhenNoAlbumsExist()
         {
             _albumRepositoryMock.Setup(r => r.GetAllAlbums()).Returns(new List<Album>());
 
             var result = _albumService.GetAllAlbums();
+
             Assert.IsEmpty(result);
         }
         [Test]
@@ -54,6 +56,7 @@ namespace RecordShop_Tests.ServiceTests
             _albumRepositoryMock.Verify(r => r.GetAllAlbums(), Times.Once);
         }
 
+        // -------------------------- GetAlbumById Tests --------------------------------
         [Test]
         public void GetAlbumById_ShouldReturnAlbum_WhenAlbumExists()
         {
@@ -62,7 +65,6 @@ namespace RecordShop_Tests.ServiceTests
 
             var result = _albumService.GetAlbumById(2);
 
-            // Assert
             Assert.IsNotNull(result);
             Assert.Multiple(() =>
             {
@@ -75,7 +77,6 @@ namespace RecordShop_Tests.ServiceTests
                 Assert.AreEqual(expectedAlbum.StockQuantity, result.StockQuantity);
             });
         }
-
         [Test]
         public void GetAlbumById_ShouldReturnNull_WhenAlbumDoesNotExists()
         {
@@ -85,7 +86,6 @@ namespace RecordShop_Tests.ServiceTests
 
             Assert.IsNull(result);
         }
-
         [Test]
         public void GetAlbumById_ShouldInvokeGetAlbumByIdOnceFromRepositoryLayer()
         {
@@ -95,6 +95,28 @@ namespace RecordShop_Tests.ServiceTests
             _albumService.GetAlbumById(2);
 
             _albumRepositoryMock.Verify(r => r.GetAlbumById(2), Times.Once);
+        }
+
+        // -------------------------- AddNewAlbum Tests --------------------------------
+        [Test]
+        public void AddNewAlbum_ShouldReturnAlbum_WhenNotNull()
+        {
+            var newAlbum = new Album { AlbumId = 1, Title = "Thriller", Artist = "Michael Jackson", Genre = "Pop", ReleaseYear = 1982, Price = 11.99m, StockQuantity = 8 };
+            _albumRepositoryMock.Setup(r => r.AddNewAlbum(newAlbum)).Returns(newAlbum);
+
+            var result = _albumService.AddNewAlbum(newAlbum);
+
+            Assert.IsNotNull(result);
+            Assert.Multiple(() =>
+            {
+                Assert.AreEqual(newAlbum.AlbumId, result.AlbumId);
+                Assert.AreEqual(newAlbum.Title, result.Title);
+                Assert.AreEqual(newAlbum.Artist, result.Artist);
+                Assert.AreEqual(newAlbum.Genre, result.Genre);
+                Assert.AreEqual(newAlbum.ReleaseYear, result.ReleaseYear);
+                Assert.AreEqual(newAlbum.Price, result.Price);
+                Assert.AreEqual(newAlbum.StockQuantity, result.StockQuantity);
+            });
         }
     }
 }

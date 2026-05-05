@@ -6,7 +6,7 @@ namespace RecordShop.Repositories
     {
         public IEnumerable<Album> GetAllAlbums();
         public Album GetAlbumById(int albumId);
-        //public Album AddNewAlbum(Album album);
+        public Album AddNewAlbum(Album album);
         //public Album UpdateAlbum(Album updatedAlbum);
         //public bool DeleteAlbum(int albumId);
         //public List<Album> GetAllAlbumsByArtist(string artistName);
@@ -28,6 +28,15 @@ namespace RecordShop.Repositories
         public Album GetAlbumById(int albumId)
         {
             return _context.Albums.FirstOrDefault(a => a.AlbumId == albumId) ?? null;
+        }
+        public Album AddNewAlbum(Album newAlbum) 
+        {
+            int newAlbumId = _context.Albums.Any() ? _context.Albums.Max(a => a.AlbumId) + 1 : 1;
+            newAlbum.AlbumId = newAlbumId;
+
+            _context.Albums.Add(newAlbum);
+            _context.SaveChanges();
+            return newAlbum;
         }
     }
 }

@@ -27,6 +27,7 @@ namespace RecordShop_Tests.ControllersTests
             };
         }
 
+        // --------------------- GetAllAlbums Tests --------------------------------------
         [Test]
         public void GetAllAlbums_ReturnsOkResultWithAlbumsList()
         {
@@ -41,7 +42,6 @@ namespace RecordShop_Tests.ControllersTests
             Assert.IsNotNull(returnedAlbums);
             Assert.That(returnedAlbums.Count(), Is.EqualTo(5));
         }
-
         [Test]
         public void GetAllAlbums_ShouldInvokeGetAllAlbumsFromServiceLayer()
         {
@@ -52,6 +52,7 @@ namespace RecordShop_Tests.ControllersTests
             _albumServicesMock.Verify(s => s.GetAllAlbums(), Times.Once);
         }
 
+        // --------------------- GetAlbumById Tests --------------------------------------
         [Test]
         public void GetAlbumById_ReturnsOkResultWithAlbum_WhenAlbumExists()
         {
@@ -65,7 +66,6 @@ namespace RecordShop_Tests.ControllersTests
             Assert.IsNotNull(okResult);
             Assert.AreEqual(album, okResult.Value);
         }
-
         [Test]
         public void GetAlbumById_ReturnsNotFound_WhenAlbumDoesNotExist()
         {
@@ -75,7 +75,6 @@ namespace RecordShop_Tests.ControllersTests
 
             Assert.IsInstanceOf<NotFoundResult>(result);
         }
-
         [Test]
         public void GetAlbumById_ShouldInvokeGetAlbumByIdFromServiceLayer()
         {
@@ -84,6 +83,40 @@ namespace RecordShop_Tests.ControllersTests
             _albumController.GetAlbumById(1);
 
             _albumServicesMock.Verify(s => s.GetAlbumById(1), Times.Once);
+        }
+
+        // --------------------- PostNewAlbum Tests --------------------------------------
+        [Test]
+        public void PostNewAlbum_ReturnsCreatedAtActionResultWithAlbum()
+        {
+            var newAlbum = new Album { AlbumId = 1, Title = "Thriller", Artist = "Michael Jackson", Genre = "Pop", ReleaseYear = 1982, Price = 11.99m, StockQuantity = 8 };
+            _albumServicesMock.Setup(s => s.AddNewAlbum(newAlbum)).Returns(newAlbum);
+
+            var result = _albumController.PostNewAlbum(newAlbum);
+            var createdResult = result as CreatedAtActionResult;
+
+            Assert.IsInstanceOf<CreatedAtActionResult>(result);
+            Assert.IsNotNull(createdResult);
+            Assert.AreEqual(newAlbum, createdResult.Value);
+        }
+        [Test]
+        public void PostNewAlbum_ReturnsBadRequest_WhenAlbumIsNull()
+        {
+            Album? newAlbum = null;
+
+            var result = _albumController.PostNewAlbum(newAlbum);
+
+            Assert.IsInstanceOf<BadRequestObjectResult>(result);
+        }
+        [Test]
+        public void PostNewAlbum_ShouldInvokeAddNewAlbumFromServiceLayer()
+        {
+            var newAlbum = new Album { AlbumId = 1, Title = "Thriller", Artist = "Michael Jackson", Genre = "Pop", ReleaseYear = 1982, Price = 11.99m, StockQuantity = 8 };
+            _albumServicesMock.Setup(s => s.AddNewAlbum(newAlbum)).Returns(newAlbum);
+
+            _albumController.PostNewAlbum(newAlbum);
+
+            _albumServicesMock.Verify(s => s.AddNewAlbum(newAlbum), Times.Once);
         }
     }
 }

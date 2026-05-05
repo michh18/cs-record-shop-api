@@ -17,7 +17,7 @@ namespace RecordShop.Controllers
         public IActionResult GetAllAlbums()
         {
             var albums = _albumsService.GetAllAlbums();
-            return albums is not null ? Ok(albums) : NotFound();
+            return Ok(albums);
         }
 
         [HttpGet("{albumId}")]
@@ -25,6 +25,17 @@ namespace RecordShop.Controllers
         {
             var album = _albumsService.GetAlbumById(albumId);
             return album is not null ? Ok(album) : NotFound();
+        }
+
+        [HttpPost]
+        public IActionResult PostNewAlbum(Album newAlbum)
+        {
+            if (newAlbum == null)
+            {
+                return BadRequest("Album cannot be null");
+            }
+            var createdAlbum = _albumsService.AddNewAlbum(newAlbum);
+            return CreatedAtAction(nameof(GetAlbumById), new { albumId = createdAlbum.AlbumId }, createdAlbum);
         }
     }
 }
