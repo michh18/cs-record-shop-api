@@ -19,5 +19,12 @@ namespace RecordShop.Controllers
             var albums = _albumsService.GetAllAlbums();
             return albums is not null ? Ok(albums) : NotFound();
         }
+
+        [HttpGet("{albumId}")]
+        public IActionResult GetAlbumById(int albumId)
+        {
+            var album = _albumsService.GetAlbumById(albumId);
+            return album is not null ? Ok(album) : NotFound();
+        }
     }
 }

@@ -1,4 +1,5 @@
 using Moq;
+using RecordShop.Controllers;
 using RecordShop.DataModels;
 using RecordShop.Repositories;
 using RecordShop.Services;
@@ -29,7 +30,8 @@ namespace RecordShop_Tests.ServiceTests
         [Test]
         public void GetAllAlbums_ReturnsAllAlbums()
         {
-            _albumRepositoryMock.Setup(repo => repo.GetAllAlbums()).Returns(_albums);
+            _albumRepositoryMock.Setup(r => r.GetAllAlbums()).Returns(_albums);
+
             var result = _albumService.GetAllAlbums();
             Assert.That(result, Is.EqualTo(_albums));
         }
@@ -37,9 +39,62 @@ namespace RecordShop_Tests.ServiceTests
         [Test]
         public void GetAllAlbums_ReturnsEmptyList_WhenNoAlbumsExist()
         {
-            _albumRepositoryMock.Setup(repo => repo.GetAllAlbums()).Returns(new List<Album>());
+            _albumRepositoryMock.Setup(r => r.GetAllAlbums()).Returns(new List<Album>());
+
             var result = _albumService.GetAllAlbums();
             Assert.IsEmpty(result);
+        }
+        [Test]
+        public void GetAllAlbums_ShouldInvokeGetAllAlbumsFromRepositoryLayer()
+        {
+            _albumRepositoryMock.Setup(r => r.GetAllAlbums()).Returns(_albums);
+
+            _albumService.GetAllAlbums();
+
+            _albumRepositoryMock.Verify(r => r.GetAllAlbums(), Times.Once);
+        }
+
+        [Test]
+        public void GetAlbumById_ShouldReturnAlbum_WhenAlbumExists()
+        {
+            var expectedAlbum = new Album { AlbumId = 2, Title = "21", Artist = "Adele", Genre = "Pop", ReleaseYear = 2011, Price = 9.99m, StockQuantity = 10 };
+            _albumRepositoryMock.Setup(r => r.GetAlbumById(2)).Returns(expectedAlbum);
+
+            var result = _albumService.GetAlbumById(2);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.Multiple(() =>
+            {
+                Assert.AreEqual(expectedAlbum.AlbumId, result.AlbumId);
+                Assert.AreEqual(expectedAlbum.Title, result.Title);
+                Assert.AreEqual(expectedAlbum.Artist, result.Artist);
+                Assert.AreEqual(expectedAlbum.Genre, result.Genre);
+                Assert.AreEqual(expectedAlbum.ReleaseYear, result.ReleaseYear);
+                Assert.AreEqual(expectedAlbum.Price, result.Price);
+                Assert.AreEqual(expectedAlbum.StockQuantity, result.StockQuantity);
+            });
+        }
+
+        [Test]
+        public void GetAlbumById_ShouldReturnNull_WhenAlbumDoesNotExists()
+        {
+            _albumRepositoryMock.Setup(r => r.GetAlbumById(100)).Returns((Album?) null);
+
+            var result = _albumService.GetAlbumById(100);
+
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public void GetAlbumById_ShouldInvokeGetAlbumByIdOnceFromRepositoryLayer()
+        {
+            var expectedAlbum = new Album { AlbumId = 2, Title = "21", Artist = "Adele", Genre = "Pop", ReleaseYear = 2011, Price = 9.99m, StockQuantity = 10 };
+            _albumRepositoryMock.Setup(r => r.GetAlbumById(2)).Returns(expectedAlbum);
+
+            _albumService.GetAlbumById(2);
+
+            _albumRepositoryMock.Verify(r => r.GetAlbumById(2), Times.Once);
         }
     }
 }

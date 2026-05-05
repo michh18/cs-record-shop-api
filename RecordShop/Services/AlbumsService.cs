@@ -6,6 +6,7 @@ namespace RecordShop.Services
     public interface IAlbumsService
     {
         public IEnumerable<Album> GetAllAlbums();
+        public Album GetAlbumById(int albumId);
     }
 
     public class AlbumsService : IAlbumsService
@@ -18,6 +19,10 @@ namespace RecordShop.Services
         public IEnumerable<Album> GetAllAlbums()
         {
             return _albumsRepository.GetAllAlbums();
+        }
+        public Album GetAlbumById(int albumId) 
+        { 
+            return _albumsRepository.GetAlbumById(albumId);
         }
     }
 }

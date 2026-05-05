@@ -5,7 +5,7 @@ namespace RecordShop.Repositories
     public interface IAlbumsRepository
     {
         public IEnumerable<Album> GetAllAlbums();
-        //public Album GetAlbumById(int albumId);
+        public Album GetAlbumById(int albumId);
         //public Album AddNewAlbum(Album album);
         //public Album UpdateAlbum(Album updatedAlbum);
         //public bool DeleteAlbum(int albumId);
@@ -24,6 +24,10 @@ namespace RecordShop.Repositories
         public IEnumerable<Album> GetAllAlbums()
         {
             return _context.Albums.ToList();
+        }
+        public Album GetAlbumById(int albumId)
+        {
+            return _context.Albums.FirstOrDefault(a => a.AlbumId == albumId) ?? null;
         }
     }
 }
