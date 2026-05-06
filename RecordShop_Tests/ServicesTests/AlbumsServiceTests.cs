@@ -129,5 +129,46 @@ namespace RecordShop_Tests.ServiceTests
 
             _albumRepositoryMock.Verify(r => r.AddNewAlbum(newAlbum), Times.Once);
         }
+        // ------------------------ UpdateAlbum Tests ----------------------------------------------------
+        [Test]
+        public void UpdateAlbum_UpdatesAllFields_WhenAlbumExists()
+        {
+            var updated = new Album { AlbumId = 4, Title = "Rumours", Artist = "Fleetwood Mac", Genre = "Rock", ReleaseYear = 1977, Price = 10.49m, StockQuantity = 7 };
+
+            _albumRepositoryMock.Setup(r => r.UpdateAlbum(4, updated)).Returns(updated);
+
+            var result = _albumService.UpdateAlbum(4, updated);
+            Assert.Multiple(() =>
+            {
+                Assert.AreEqual(4, result.AlbumId);
+                Assert.AreEqual("Rumours", result.Title);
+                Assert.AreEqual("Fleetwood Mac", result.Artist);
+                Assert.AreEqual("Rock", result.Genre);
+                Assert.AreEqual(1977, result.ReleaseYear);
+                Assert.AreEqual(10.49m, result.Price);
+                Assert.AreEqual(7, result.StockQuantity);
+            });
+        }
+        [Test]
+        public void UpdateAlbum_DoesNotUpdate_WhenAlbumDoesNotExists()
+        {
+            var updated = new Album { AlbumId = 6, Title = "Rumours", Artist = "Fleetwood Mac", Genre = "Rock", ReleaseYear = 1977, Price = 10.49m, StockQuantity = 7 };
+
+            _albumRepositoryMock.Setup(r => r.GetAlbumById(6)).Returns((Album)null);
+
+            var result = _albumService.UpdateAlbum(6, updated);
+
+            Assert.IsNull(result);
+        }
+        [Test]
+        public void UpdatedAlbum_ShouldInvokeUpdateAlbumFromRepositoryLayer()
+        {
+            var updatedAlbum = new Album { AlbumId = 4, Title = "Rumours", Artist = "Fleetwood Mac", Genre = "Rock", ReleaseYear = 1977, Price = 10.49m, StockQuantity = 7 };
+            _albumRepositoryMock.Setup(r => r.UpdateAlbum(4, updatedAlbum)).Returns(updatedAlbum);
+
+            _albumService.UpdateAlbum(4, updatedAlbum);
+
+            _albumRepositoryMock.Verify(r => r.UpdateAlbum(4, updatedAlbum), Times.Once);
+        }
     }
 }

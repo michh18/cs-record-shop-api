@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using RecordShop.Controllers;
@@ -109,11 +110,10 @@ namespace RecordShop_Tests.ControllersTests
             Assert.IsInstanceOf<BadRequestObjectResult>(result);
         }
         [Test]
-        public void PostNewAlbum_ReturnsBadRequest_WhenSomeAlbumInfoIsNull()
+        public void PostNewAlbum_ReturnsBadRequest_WhenSomeAlbumInfoIsInvalid()
         {
-            Album badAlbum =new Album { AlbumId = 1, Title = " ", Artist = " ", Genre = " ", ReleaseYear = 1982, Price = 11.99m, StockQuantity = 8 };
+            Album badAlbum = new Album { AlbumId = 1, Title = " ", Artist = " ", Genre = " ", ReleaseYear = 1982, Price = 11.99m, StockQuantity = 8 };
 
-            _albumServicesMock.Setup(r => r.AddNewAlbum(badAlbum)).Returns(badAlbum);
             var result = _albumController.PostNewAlbum(badAlbum);
 
             Assert.IsInstanceOf<BadRequestObjectResult>(result);
@@ -127,6 +127,67 @@ namespace RecordShop_Tests.ControllersTests
             _albumController.PostNewAlbum(newAlbum);
 
             _albumServicesMock.Verify(s => s.AddNewAlbum(newAlbum), Times.Once);
+        }
+        // ------------------------ UpdateAlbum Tests ----------------------------------------------------
+        [Test]
+        public void UpdateAlbum_ReturnsOkResultWithUpdatedAlbum() 
+        {
+            var updatedAlbum = new Album { AlbumId = 4, Title = "Rumours", Artist = "Fleetwood Mac", Genre = "Rock", ReleaseYear = 1977, Price = 10.49m, StockQuantity = 7 };
+            
+            _albumServicesMock.Setup(s => s.UpdateAlbum(4, updatedAlbum)).Returns(updatedAlbum);
+
+            var result = _albumController.UpdateAlbum(4, updatedAlbum);
+            var okResult = result as OkObjectResult;
+
+            Assert.IsInstanceOf<OkObjectResult>(result);
+            Assert.IsNotNull(okResult);
+            Assert.AreEqual(updatedAlbum, okResult.Value);
+
+        }
+        [Test]
+        public void UpdateAlbum_ReturnsBadRequest_WhenAlbumIsNull()
+        {
+            var result = _albumController.UpdateAlbum(1, (Album?)null);
+
+            Assert.IsInstanceOf<BadRequestObjectResult>(result);
+
+            var badRequest = result as BadRequestObjectResult;
+            Assert.AreEqual("Album cannot be null", badRequest.Value);
+        }
+        [Test]
+        public void UpdateAlbum_ReturnsBadRequest_WhenAlbumIsInvalid()
+        {
+            var updatedAlbum = new Album { AlbumId = 4, Title = " ", Artist = "Fleetwood Mac", Genre = "Rock", ReleaseYear = 1977, Price = 10.49m, StockQuantity = 7 };
+
+            var result = _albumController.UpdateAlbum(4, updatedAlbum);
+
+            Assert.IsInstanceOf<BadRequestObjectResult>(result);
+
+            var badRequest = result as BadRequestObjectResult;
+            Assert.AreEqual("Invalid album info", badRequest.Value);
+        }
+        [Test]
+        public void UpdateAlbum_ReturnsBadRequest_WhenAlbumIdDoesNotExist()
+        {
+            var updatedAlbum = new Album { AlbumId = 4, Title = "Rumours", Artist = "Fleetwood Mac", Genre = "Rock", ReleaseYear = 1977, Price = 10.49m, StockQuantity = 7 };
+
+            _albumServicesMock.Setup(s => s.UpdateAlbum(4, updatedAlbum)).Returns((Album)null);
+            var result = _albumController.UpdateAlbum(4, updatedAlbum);
+
+            Assert.IsInstanceOf<NotFoundObjectResult>(result);
+
+            var notFound = result as NotFoundObjectResult;
+            Assert.AreEqual("AlbumId not found", notFound.Value);
+        }
+        [Test]
+        public void UpdatedAlbum_ShouldInvokeUpdateAlbumFromServiceLayer()
+        {
+            var updatedAlbum = new Album { AlbumId = 4, Title = "Rumours", Artist = "Fleetwood Mac", Genre = "Rock", ReleaseYear = 1977, Price = 10.49m, StockQuantity = 7 };
+            _albumServicesMock.Setup(s => s.UpdateAlbum(4, updatedAlbum)).Returns(updatedAlbum);
+
+            _albumController.UpdateAlbum(4, updatedAlbum);
+
+            _albumServicesMock.Verify(s => s.UpdateAlbum(4, updatedAlbum), Times.Once);
         }
     }
 }
