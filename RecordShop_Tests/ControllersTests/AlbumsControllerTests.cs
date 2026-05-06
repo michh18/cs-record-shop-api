@@ -20,11 +20,11 @@ namespace RecordShop_Tests.ControllersTests
             _albumController = new AlbumsController(_albumServicesMock.Object);
             _albums = new List<Album>
             {
-                new Album {AlbumId = 1, Title = "Thriller", Artist = "Michael Jackson", Genre = "Pop", ReleaseYear = 1982, Price = 11.99m, StockQuantity = 8 },
-                new Album {AlbumId = 2, Title = "21", Artist = "Adele", Genre = "Pop", ReleaseYear = 2011, Price = 9.99m, StockQuantity = 10},
-                new Album {AlbumId = 3, Title = "Back to Black", Artist = "Amy Winehouse", Genre = "Soul", ReleaseYear = 2006, Price = 10.99m, StockQuantity = 3},
-                new Album {AlbumId = 4, Title = "Abbey Road", Artist = "The Beatles", Genre = "Rock", ReleaseYear = 1969, Price = 12.99m, StockQuantity = 5},
-                new Album {AlbumId = 5, Title = "To Pimp a Butterfly", Artist = "Kendrick Lamar", Genre = "Hip-Hop", ReleaseYear = 2015, Price = 13.49m, StockQuantity = 4}
+                new Album (1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8),
+                new Album (2, "21", "Adele", "Pop", 2011, 9.99m, 10),
+                new Album (3, "Back to Black", "Amy Winehouse", "Soul", 2006, 10.99m, 3),
+                new Album (4, "Abbey Road", "The Beatles", "Rock", 1969, 12.99m, 5),
+                new Album (5, "To Pimp a Butterfly", "Kendrick Lamar", "Hip-Hop", 2015, 13.49m, 4)
             };
         }
 
@@ -57,7 +57,7 @@ namespace RecordShop_Tests.ControllersTests
         [Test]
         public void GetAlbumById_ReturnsOkResultWithAlbum_WhenAlbumExists()
         {
-            var album = new Album { AlbumId = 1, Title = "Thriller", Artist = "Michael Jackson", Genre = "Pop", ReleaseYear = 1982, Price = 11.99m, StockQuantity = 8 };
+            var album = new Album (1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8);
             _albumServicesMock.Setup(s => s.GetAlbumById(1)).Returns(album);
 
             var result = _albumController.GetAlbumById(1);
@@ -90,7 +90,7 @@ namespace RecordShop_Tests.ControllersTests
         [Test]
         public void PostNewAlbum_ReturnsCreatedAtActionResultWithAlbum()
         {
-            var newAlbum = new Album { AlbumId = 1, Title = "Thriller", Artist = "Michael Jackson", Genre = "Pop", ReleaseYear = 1982, Price = 11.99m, StockQuantity = 8 };
+            var newAlbum = new Album (3, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8);
             _albumServicesMock.Setup(s => s.AddNewAlbum(newAlbum)).Returns(newAlbum);
 
             var result = _albumController.PostNewAlbum(newAlbum);
@@ -108,20 +108,22 @@ namespace RecordShop_Tests.ControllersTests
             var result = _albumController.PostNewAlbum(newAlbum);
 
             Assert.IsInstanceOf<BadRequestObjectResult>(result);
+            _albumServicesMock.Verify(s => s.AddNewAlbum(newAlbum), Times.Never);
         }
         [Test]
         public void PostNewAlbum_ReturnsBadRequest_WhenSomeAlbumInfoIsInvalid()
         {
-            Album badAlbum = new Album { AlbumId = 1, Title = " ", Artist = " ", Genre = " ", ReleaseYear = 1982, Price = 11.99m, StockQuantity = 8 };
+            Album badAlbum = new Album (7, " ", " ", " ", 1982, 11.99m, 8);
 
             var result = _albumController.PostNewAlbum(badAlbum);
 
             Assert.IsInstanceOf<BadRequestObjectResult>(result);
+            _albumServicesMock.Verify(s => s.AddNewAlbum(badAlbum), Times.Never);
         }
         [Test]
         public void PostNewAlbum_ShouldInvokeAddNewAlbumFromServiceLayer()
         {
-            var newAlbum = new Album { AlbumId = 1, Title = "Thriller", Artist = "Michael Jackson", Genre = "Pop", ReleaseYear = 1982, Price = 11.99m, StockQuantity = 8 };
+            var newAlbum = new Album (1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8);
             _albumServicesMock.Setup(s => s.AddNewAlbum(newAlbum)).Returns(newAlbum);
 
             _albumController.PostNewAlbum(newAlbum);
@@ -132,7 +134,7 @@ namespace RecordShop_Tests.ControllersTests
         [Test]
         public void UpdateAlbum_ReturnsOkResultWithUpdatedAlbum() 
         {
-            var updatedAlbum = new Album { AlbumId = 4, Title = "Rumours", Artist = "Fleetwood Mac", Genre = "Rock", ReleaseYear = 1977, Price = 10.49m, StockQuantity = 7 };
+            var updatedAlbum = new Album (4, "Rumours", "Fleetwood Mac", "Rock", 1977, 10.49m, 7);
             
             _albumServicesMock.Setup(s => s.UpdateAlbum(4, updatedAlbum)).Returns(updatedAlbum);
 
@@ -153,11 +155,12 @@ namespace RecordShop_Tests.ControllersTests
 
             var badRequest = result as BadRequestObjectResult;
             Assert.AreEqual("Album cannot be null", badRequest.Value);
+            _albumServicesMock.Verify(s => s.UpdateAlbum(1, (Album?)null), Times.Never);
         }
         [Test]
         public void UpdateAlbum_ReturnsBadRequest_WhenAlbumIsInvalid()
         {
-            var updatedAlbum = new Album { AlbumId = 4, Title = " ", Artist = "Fleetwood Mac", Genre = "Rock", ReleaseYear = 1977, Price = 10.49m, StockQuantity = 7 };
+            var updatedAlbum = new Album (4, " ", "Fleetwood Mac", "Rock", 1977, 10.49m, 7);
 
             var result = _albumController.UpdateAlbum(4, updatedAlbum);
 
@@ -165,11 +168,12 @@ namespace RecordShop_Tests.ControllersTests
 
             var badRequest = result as BadRequestObjectResult;
             Assert.AreEqual("Invalid album info", badRequest.Value);
+            _albumServicesMock.Verify(s => s.UpdateAlbum(1, updatedAlbum), Times.Never);
         }
         [Test]
-        public void UpdateAlbum_ReturnsBadRequest_WhenAlbumIdDoesNotExist()
+        public void UpdateAlbum_ReturnsBadRequest_WhenAlbumIsNotFound()
         {
-            var updatedAlbum = new Album { AlbumId = 4, Title = "Rumours", Artist = "Fleetwood Mac", Genre = "Rock", ReleaseYear = 1977, Price = 10.49m, StockQuantity = 7 };
+            var updatedAlbum = new Album (4, "Rumours", "Fleetwood Mac", "Rock", 1977, 10.49m, 7);
 
             _albumServicesMock.Setup(s => s.UpdateAlbum(4, updatedAlbum)).Returns((Album)null);
             var result = _albumController.UpdateAlbum(4, updatedAlbum);
@@ -182,7 +186,7 @@ namespace RecordShop_Tests.ControllersTests
         [Test]
         public void UpdatedAlbum_ShouldInvokeUpdateAlbumFromServiceLayer()
         {
-            var updatedAlbum = new Album { AlbumId = 4, Title = "Rumours", Artist = "Fleetwood Mac", Genre = "Rock", ReleaseYear = 1977, Price = 10.49m, StockQuantity = 7 };
+            var updatedAlbum = new Album (4,"Rumours", "Fleetwood Mac", "Rock", 1977, 10.49m, 7);
             _albumServicesMock.Setup(s => s.UpdateAlbum(4, updatedAlbum)).Returns(updatedAlbum);
 
             _albumController.UpdateAlbum(4, updatedAlbum);

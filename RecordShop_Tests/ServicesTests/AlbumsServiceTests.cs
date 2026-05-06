@@ -19,11 +19,11 @@ namespace RecordShop_Tests.ServiceTests
             _albumService = new AlbumsService(_albumRepositoryMock.Object);
             _albums = new List<Album>
             {
-                new Album {AlbumId = 1, Title = "Thriller", Artist = "Michael Jackson", Genre = "Pop", ReleaseYear = 1982, Price = 11.99m, StockQuantity = 8 },
-                new Album {AlbumId = 2, Title = "21", Artist = "Adele", Genre = "Pop", ReleaseYear = 2011, Price = 9.99m, StockQuantity = 10},
-                new Album {AlbumId = 3, Title = "Back to Black", Artist = "Amy Winehouse", Genre = "Soul", ReleaseYear = 2006, Price = 10.99m, StockQuantity = 3},
-                new Album {AlbumId = 4, Title = "Abbey Road", Artist = "The Beatles", Genre = "Rock", ReleaseYear = 1969, Price = 12.99m, StockQuantity = 5},
-                new Album {AlbumId = 5, Title = "To Pimp a Butterfly", Artist = "Kendrick Lamar", Genre = "Hip-Hop", ReleaseYear = 2015, Price = 13.49m, StockQuantity = 4}
+                new Album (1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8 ),
+                new Album (2, "21", "Adele", "Pop", 2011, 9.99m, 10),
+                new Album (3, "Back to Black", "Amy Winehouse", "Soul", 2006, 10.99m, 3),
+                new Album (4, "Abbey Road", "The Beatles", "Rock", 1969, 12.99m, 5),
+                new Album (5, "To Pimp a Butterfly", "Kendrick Lamar", "Hip-Hop", 2015, 13.49m, 4)
             };
         }
 
@@ -60,7 +60,7 @@ namespace RecordShop_Tests.ServiceTests
         [Test]
         public void GetAlbumById_ShouldReturnAlbum_WhenAlbumExists()
         {
-            var expectedAlbum = new Album { AlbumId = 2, Title = "21", Artist = "Adele", Genre = "Pop", ReleaseYear = 2011, Price = 9.99m, StockQuantity = 10 };
+            var expectedAlbum = new Album (2, "21", "Adele", "Pop", 2011, 9.99m, 10);
             _albumRepositoryMock.Setup(r => r.GetAlbumById(2)).Returns(expectedAlbum);
 
             var result = _albumService.GetAlbumById(2);
@@ -89,7 +89,7 @@ namespace RecordShop_Tests.ServiceTests
         [Test]
         public void GetAlbumById_ShouldInvokeGetAlbumByIdOnceFromRepositoryLayer()
         {
-            var expectedAlbum = new Album { AlbumId = 2, Title = "21", Artist = "Adele", Genre = "Pop", ReleaseYear = 2011, Price = 9.99m, StockQuantity = 10 };
+            var expectedAlbum = new Album (2, "21", "Adele", "Pop", 2011, 9.99m, 10);
             _albumRepositoryMock.Setup(r => r.GetAlbumById(2)).Returns(expectedAlbum);
 
             _albumService.GetAlbumById(2);
@@ -101,7 +101,7 @@ namespace RecordShop_Tests.ServiceTests
         [Test]
         public void AddNewAlbum_ShouldReturnAlbum_WhenNotNull()
         {
-            var newAlbum = new Album { AlbumId = 1, Title = "Thriller", Artist = "Michael Jackson", Genre = "Pop", ReleaseYear = 1982, Price = 11.99m, StockQuantity = 8 };
+            var newAlbum = new Album (1,"Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8);
             _albumRepositoryMock.Setup(r => r.AddNewAlbum(newAlbum)).Returns(newAlbum);
 
             var result = _albumService.AddNewAlbum(newAlbum);
@@ -122,7 +122,7 @@ namespace RecordShop_Tests.ServiceTests
         [Test]
         public void AddNewAlbum_ShouldInvokeAddNewAlbumOnceFromRepositoryLayer()
         {
-            var newAlbum = new Album { AlbumId = 2, Title = "21", Artist = "Adele", Genre = "Pop", ReleaseYear = 2011, Price = 9.99m, StockQuantity = 10 };
+            var newAlbum = new Album (2, "21", "Adele", "Pop", 2011, 9.99m, 10);
             _albumRepositoryMock.Setup(r => r.AddNewAlbum(newAlbum)).Returns(newAlbum);
 
             _albumService.AddNewAlbum(newAlbum);
@@ -133,7 +133,7 @@ namespace RecordShop_Tests.ServiceTests
         [Test]
         public void UpdateAlbum_UpdatesAllFields_WhenAlbumExists()
         {
-            var updated = new Album { AlbumId = 4, Title = "Rumours", Artist = "Fleetwood Mac", Genre = "Rock", ReleaseYear = 1977, Price = 10.49m, StockQuantity = 7 };
+            var updated = new Album (4, "Rumours", "Fleetwood Mac", "Rock", 1977, 10.49m, 7);
 
             _albumRepositoryMock.Setup(r => r.UpdateAlbum(4, updated)).Returns(updated);
 
@@ -141,18 +141,18 @@ namespace RecordShop_Tests.ServiceTests
             Assert.Multiple(() =>
             {
                 Assert.AreEqual(4, result.AlbumId);
-                Assert.AreEqual("Rumours", result.Title);
-                Assert.AreEqual("Fleetwood Mac", result.Artist);
-                Assert.AreEqual("Rock", result.Genre);
-                Assert.AreEqual(1977, result.ReleaseYear);
-                Assert.AreEqual(10.49m, result.Price);
-                Assert.AreEqual(7, result.StockQuantity);
+                Assert.AreEqual(updated.Title, result.Title);
+                Assert.AreEqual(updated.Artist, result.Artist);
+                Assert.AreEqual(updated.Genre, result.Genre);
+                Assert.AreEqual(updated.ReleaseYear, result.ReleaseYear);
+                Assert.AreEqual(updated.Price, result.Price);
+                Assert.AreEqual(updated.StockQuantity, result.StockQuantity);
             });
         }
         [Test]
         public void UpdateAlbum_DoesNotUpdate_WhenAlbumDoesNotExists()
         {
-            var updated = new Album { AlbumId = 6, Title = "Rumours", Artist = "Fleetwood Mac", Genre = "Rock", ReleaseYear = 1977, Price = 10.49m, StockQuantity = 7 };
+            var updated = new Album (4, "Rumours", "Fleetwood Mac", "Rock", 1977, 10.49m, 7);
 
             _albumRepositoryMock.Setup(r => r.GetAlbumById(6)).Returns((Album)null);
 
@@ -163,12 +163,13 @@ namespace RecordShop_Tests.ServiceTests
         [Test]
         public void UpdatedAlbum_ShouldInvokeUpdateAlbumFromRepositoryLayer()
         {
-            var updatedAlbum = new Album { AlbumId = 4, Title = "Rumours", Artist = "Fleetwood Mac", Genre = "Rock", ReleaseYear = 1977, Price = 10.49m, StockQuantity = 7 };
+            var updatedAlbum = new Album (4, "Rumours", "Fleetwood Mac", "Rock", 1977, 10.49m, 7);
             _albumRepositoryMock.Setup(r => r.UpdateAlbum(4, updatedAlbum)).Returns(updatedAlbum);
 
             _albumService.UpdateAlbum(4, updatedAlbum);
 
             _albumRepositoryMock.Verify(r => r.UpdateAlbum(4, updatedAlbum), Times.Once);
         }
+        // --------------------------- DeleteAlbumById Tests ----------------------------------
     }
 }

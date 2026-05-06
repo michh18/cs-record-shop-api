@@ -9,6 +9,16 @@
         public int ReleaseYear { get; set; }
         public decimal Price { get; set; }
         public int StockQuantity { get; set; }
+        public Album(int albumId, string title, string artist, string genre, int releaseYear, decimal price, int stockQuantity) 
+        {
+            AlbumId = albumId;
+            Title = title;
+            Artist = artist;
+            Genre = genre;
+            ReleaseYear = releaseYear;
+            Price = price;
+            StockQuantity = stockQuantity;
+        }
     }
 }
 

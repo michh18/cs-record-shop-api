@@ -43,7 +43,7 @@ namespace RecordShop.Controllers
         }
 
         [HttpPut("{albumId}")]
-        public IActionResult UpdateAlbum(int albumId, [FromBody] Album updatedAlbum) 
+        public IActionResult UpdateAlbum(int albumId, [FromBody] Album updatedAlbum)
         {
             if (updatedAlbum == null)
             {
@@ -61,6 +61,12 @@ namespace RecordShop.Controllers
                 return NotFound("AlbumId not found");
             }
             return Ok(albumAfterUpdate);
+        }
+        [HttpDelete("{albumId}")]
+        public IActionResult DeleteAlbumById(int albumId)
+        {
+            var deleted = _albumsService.DeleteAlbumById(albumId);
+            return deleted ? NoContent() : NotFound();
         }
     }
 }
