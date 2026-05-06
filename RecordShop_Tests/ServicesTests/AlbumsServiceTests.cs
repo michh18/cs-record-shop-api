@@ -118,5 +118,16 @@ namespace RecordShop_Tests.ServiceTests
                 Assert.AreEqual(newAlbum.StockQuantity, result.StockQuantity);
             });
         }
+
+        [Test]
+        public void AddNewAlbum_ShouldInvokeAddNewAlbumOnceFromRepositoryLayer()
+        {
+            var newAlbum = new Album { AlbumId = 2, Title = "21", Artist = "Adele", Genre = "Pop", ReleaseYear = 2011, Price = 9.99m, StockQuantity = 10 };
+            _albumRepositoryMock.Setup(r => r.AddNewAlbum(newAlbum)).Returns(newAlbum);
+
+            _albumService.AddNewAlbum(newAlbum);
+
+            _albumRepositoryMock.Verify(r => r.AddNewAlbum(newAlbum), Times.Once);
+        }
     }
 }
