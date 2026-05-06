@@ -7,7 +7,7 @@ namespace RecordShop.Repositories
         public IEnumerable<Album> GetAllAlbums();
         public Album GetAlbumById(int albumId);
         public Album AddNewAlbum(Album album);
-        //public Album UpdateAlbum(Album updatedAlbum);
+        public Album UpdateAlbum(int albumId, Album updatedAlbum);
         //public bool DeleteAlbum(int albumId);
         //public List<Album> GetAllAlbumsByArtist(string artistName);
         //public List<Album> GetAllAlbumsByReleaseYear(int releaseYear);
@@ -37,6 +37,23 @@ namespace RecordShop.Repositories
             _context.Albums.Add(newAlbum);
             _context.SaveChanges();
             return newAlbum;
+        }
+        public Album UpdateAlbum(int albumId, Album updatedAlbum) 
+        {
+            var existingAlbum = GetAlbumById(albumId);
+            if (existingAlbum == null) 
+            {
+                return null;
+            }
+            existingAlbum.Title = updatedAlbum.Title;
+            existingAlbum.Artist = updatedAlbum.Artist;
+            existingAlbum.Genre = updatedAlbum.Genre;
+            existingAlbum.ReleaseYear = updatedAlbum.ReleaseYear;
+            existingAlbum.Price = updatedAlbum.Price;
+            existingAlbum.StockQuantity = updatedAlbum.StockQuantity;
+
+            _context.SaveChanges();
+            return existingAlbum;
         }
     }
 }

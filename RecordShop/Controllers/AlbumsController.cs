@@ -41,5 +41,26 @@ namespace RecordShop.Controllers
             var createdAlbum = _albumsService.AddNewAlbum(newAlbum);
             return CreatedAtAction(nameof(GetAlbumById), new { albumId = createdAlbum.AlbumId }, createdAlbum);
         }
+
+        [HttpPut("{albumId}")]
+        public IActionResult UpdateAlbum(int albumId, [FromBody] Album updatedAlbum) 
+        {
+            if (updatedAlbum == null)
+            {
+                return BadRequest("Album cannot be null");
+            }
+            else if (string.IsNullOrWhiteSpace(updatedAlbum.Title) || string.IsNullOrWhiteSpace(updatedAlbum.Artist) || string.IsNullOrWhiteSpace(updatedAlbum.Genre))
+            {
+                return BadRequest("Invalid album info");
+            }
+
+            var albumAfterUpdate = _albumsService.UpdateAlbum(albumId, updatedAlbum);
+
+            if (albumAfterUpdate == null)
+            {
+                return NotFound("AlbumId not found");
+            }
+            return Ok(albumAfterUpdate);
+        }
     }
 }
