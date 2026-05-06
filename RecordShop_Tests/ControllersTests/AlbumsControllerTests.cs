@@ -109,6 +109,16 @@ namespace RecordShop_Tests.ControllersTests
             Assert.IsInstanceOf<BadRequestObjectResult>(result);
         }
         [Test]
+        public void PostNewAlbum_ReturnsBadRequest_WhenSomeAlbumInfoIsNull()
+        {
+            Album badAlbum =new Album { AlbumId = 1, Title = " ", Artist = " ", Genre = " ", ReleaseYear = 1982, Price = 11.99m, StockQuantity = 8 };
+
+            _albumServicesMock.Setup(r => r.AddNewAlbum(badAlbum)).Returns(badAlbum);
+            var result = _albumController.PostNewAlbum(badAlbum);
+
+            Assert.IsInstanceOf<BadRequestObjectResult>(result);
+        }
+        [Test]
         public void PostNewAlbum_ShouldInvokeAddNewAlbumFromServiceLayer()
         {
             var newAlbum = new Album { AlbumId = 1, Title = "Thriller", Artist = "Michael Jackson", Genre = "Pop", ReleaseYear = 1982, Price = 11.99m, StockQuantity = 8 };

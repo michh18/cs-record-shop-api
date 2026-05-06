@@ -34,6 +34,10 @@ namespace RecordShop.Controllers
             {
                 return BadRequest("Album cannot be null");
             }
+            else if (string.IsNullOrWhiteSpace(newAlbum.Title) || string.IsNullOrWhiteSpace(newAlbum.Artist) || string.IsNullOrWhiteSpace(newAlbum.Genre))
+            {
+                return BadRequest("Invalid album info");
+            }
             var createdAlbum = _albumsService.AddNewAlbum(newAlbum);
             return CreatedAtAction(nameof(GetAlbumById), new { albumId = createdAlbum.AlbumId }, createdAlbum);
         }
