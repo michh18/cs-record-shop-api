@@ -193,5 +193,38 @@ namespace RecordShop_Tests.ControllersTests
 
             _albumServicesMock.Verify(s => s.UpdateAlbum(4, updatedAlbum), Times.Once);
         }
+        // ----------------------------------- DeleteAlbumById tests -------------------------------------------------
+        [Test]
+        public void DeleteAlbumById_ReturnsNoContent_WhenDeleteIsSuccessful()
+        {
+            _albumServicesMock.Setup(s => s.DeleteAlbumById(4)).Returns(true);
+
+            var result = _albumController.DeleteAlbumById(4);
+
+            Assert.IsInstanceOf<NoContentResult>(result);
+
+            _albumServicesMock.Verify(s => s.DeleteAlbumById(4), Times.Once);
+        }
+        [Test]
+        public void DeleteAlbumById_ReturnsNotFound_WhenAlbumDoesNotExist()
+        {
+            _albumServicesMock.Setup(s => s.DeleteAlbumById(4)).Returns(false);
+
+            var result = _albumController.DeleteAlbumById(4);
+
+            Assert.IsInstanceOf<NotFoundObjectResult>(result);
+
+            var notFound = result as NotFoundObjectResult;
+            Assert.AreEqual("Album not found", notFound.Value);
+        }
+        [Test]
+        public void DeleteAlbumById_CallsServiceOnce()
+        {
+            _albumServicesMock.Setup(s => s.DeleteAlbumById(4)).Returns(true);
+
+            _albumController.DeleteAlbumById(4);
+
+            _albumServicesMock.Verify(s => s.DeleteAlbumById(4), Times.Once);
+        }
     }
 }

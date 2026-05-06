@@ -171,5 +171,18 @@ namespace RecordShop_Tests.ServiceTests
             _albumRepositoryMock.Verify(r => r.UpdateAlbum(4, updatedAlbum), Times.Once);
         }
         // --------------------------- DeleteAlbumById Tests ----------------------------------
+        [Test]
+        public void DeleteAlbumById_ReturnsTrue_WhenAlbumExists()
+        {
+            var album = new Album(4, "Rumours", "Fleetwood Mac", "Rock", 1977, 10.49m, 7);
+
+            _albumRepositoryMock.Setup(r => r.GetAlbumById(4)).Returns(album);
+            _albumRepositoryMock.Setup(r => r.DeleteAlbumById(album.AlbumId)).Returns(true);
+
+            var result = _albumService.DeleteAlbumById(4);
+
+            Assert.IsTrue(result);
+            _albumRepositoryMock.Verify(r => r.DeleteAlbumById(4), Times.Once);
+        }
     }
 }

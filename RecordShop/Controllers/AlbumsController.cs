@@ -66,7 +66,7 @@ namespace RecordShop.Controllers
         public IActionResult DeleteAlbumById(int albumId)
         {
             var deleted = _albumsService.DeleteAlbumById(albumId);
-            return deleted ? NoContent() : NotFound();
+            return deleted ? NoContent() : NotFound("Album not found");
         }
     }
 }
