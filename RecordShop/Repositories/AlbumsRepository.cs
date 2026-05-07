@@ -11,7 +11,7 @@ namespace RecordShop.Repositories
         public bool DeleteAlbumById(int albumId);
         public List<Album> GetAllAlbumsByArtist(string artistName);
         public List<Album> GetAllAlbumsByReleaseYear(int releaseYear);
-        //public List<Album> GetAllAlbumsByGenre(string genre);
+        public List<Album> GetAllAlbumsByGenre(string genre);
 
     }
     public class AlbumsRepository : IAlbumsRepository
@@ -74,6 +74,10 @@ namespace RecordShop.Repositories
         public List<Album> GetAllAlbumsByReleaseYear(int releaseYear) 
         {
             return _context.Albums.Where(a => a.ReleaseYear == releaseYear).ToList() ?? new List<Album>();
+        }
+        public List<Album> GetAllAlbumsByGenre(string genre)
+        {
+            return _context.Albums.Where(a => a.Genre.Equals(genre, StringComparison.OrdinalIgnoreCase)).ToList() ?? new List<Album>();
         }
     }
 }

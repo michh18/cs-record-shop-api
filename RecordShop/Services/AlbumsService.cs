@@ -13,7 +13,7 @@ namespace RecordShop.Services
         public bool DeleteAlbumById(int albumId);
         public List<Album> GetAllAlbumsByArtist(string artistName);
         public List<Album> GetAllAlbumsByReleaseYear(int releaseYear);
-
+        public List<Album> GetAllAlbumsByGenre(string genre);
     }
 
     public class AlbumsService : IAlbumsService
@@ -50,6 +50,10 @@ namespace RecordShop.Services
         public List<Album> GetAllAlbumsByReleaseYear(int releaseYear)
         {
             return _albumsRepository.GetAllAlbumsByReleaseYear(releaseYear);
+        }
+        public List<Album> GetAllAlbumsByGenre(string genre) 
+        {
+            return _albumsRepository.GetAllAlbumsByGenre(genre);
         }
     }
 }

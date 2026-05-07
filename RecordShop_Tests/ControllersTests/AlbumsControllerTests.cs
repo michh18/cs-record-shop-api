@@ -285,7 +285,6 @@ namespace RecordShop_Tests.ControllersTests
         [Test]
         public void GetAllAlbumsByReleaseYear_ShouldReturnsOkResultWithEmptyAlbumList_WhenNoAlbumsOfReleaseYearExists()
         {
-            var expectedAlbums = new List<Album>();
             _albumServicesMock.Setup(s => s.GetAllAlbumsByReleaseYear(2000)).Returns(new List<Album>());
 
             var result = _albumController.GetAllAlbumsByReleaseYear(2000);
@@ -305,6 +304,44 @@ namespace RecordShop_Tests.ControllersTests
             _albumController.GetAllAlbumsByReleaseYear(1982);
 
             _albumServicesMock.Verify(s => s.GetAllAlbumsByReleaseYear(1982), Times.Once);
+        }
+        // ------------------------- GetAllAlbumsByGenre Tests --------------------------------
+        [Test]
+        public void GetAllAlbumsByGenre_ShouldReturnsOkResultWithAlbumsOfCorrectGenre_WhenAlbumsExists()
+        {
+            var expectedAlbums = new List<Album> { new Album(5, "To Pimp a Butterfly", "Kendrick Lamar", "Hip-Hop", 2015, 13.49m, 4) };
+            _albumServicesMock.Setup(s => s.GetAllAlbumsByGenre("Hip-Hop")).Returns(expectedAlbums);
+
+            var result = _albumController.GetAllAlbumsByGenre("Hip-Hop");
+            var okResult = result as OkObjectResult;
+            var albumResults = (List<Album>)okResult.Value;
+
+            Assert.IsInstanceOf<OkObjectResult>(result);
+            Assert.IsNotNull(okResult);
+            CollectionAssert.AreEqual(expectedAlbums, albumResults);
+        }
+        [Test]
+        public void GetAllAlbumsByGenre_ShouldReturnsOkResultWithEmptyAlbumList_WhenNoAlbumsOfGenreExists()
+        {
+            _albumServicesMock.Setup(s => s.GetAllAlbumsByGenre("Jazz")).Returns(new List<Album>());
+
+            var result = _albumController.GetAllAlbumsByGenre("Jazz");
+            var okResult = result as OkObjectResult;
+            var albumResults = (List<Album>)okResult.Value;
+
+            Assert.IsInstanceOf<OkObjectResult>(result);
+            Assert.IsNotNull(okResult);
+            Assert.IsEmpty(albumResults);
+        }
+        [Test]
+        public void GetAllAlbumsByGenre_ShouldInvokeGetAllAlbumsByGenreFromServiceLayer()
+        {
+            var expectedAlbums = new List<Album> { new Album(5, "To Pimp a Butterfly", "Kendrick Lamar", "Hip-Hop", 2015, 13.49m, 4) };
+            _albumServicesMock.Setup(s => s.GetAllAlbumsByGenre("Hip-Hop")).Returns(expectedAlbums);
+
+            _albumController.GetAllAlbumsByGenre("Hip-Hop");
+
+            _albumServicesMock.Verify(s => s.GetAllAlbumsByGenre("Hip-Hop"), Times.Once);
         }
     }
 }

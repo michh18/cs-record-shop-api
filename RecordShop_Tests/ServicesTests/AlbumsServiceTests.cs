@@ -258,5 +258,42 @@ namespace RecordShop_Tests.ServiceTests
 
             _albumRepositoryMock.Verify(r => r.GetAllAlbumsByReleaseYear(2006), Times.Once);
         }
+        // ------------------------- GetAllAlbumsByGenre Tests --------------------------------
+        [Test]
+        public void GetAllAlbumsByGenre_ShouldReturnAlbumsOfCorrectGenre_WhenAlbumsExists()
+        {
+            var expectedAlbums = new List<Album>
+            {
+                new Album (1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8 ),
+                new Album (2, "21", "Adele", "Pop", 2011, 9.99m, 10),
+                new Album (6, "25", "Adele", "Pop", 2015, 11.99m, 8)
+            };
+            _albumRepositoryMock.Setup(r => r.GetAllAlbumsByGenre("Pop")).Returns(expectedAlbums);
+
+            var result = _albumService.GetAllAlbumsByGenre("Pop");
+            Assert.IsNotNull(result);
+            Assert.AreEqual(3, result.Count);
+            CollectionAssert.AreEqual(expectedAlbums, result);
+        }
+        [Test]
+        public void GetAllAlbumsByGenre_ShouldReturnEmptyList_WhenNoAlbumsByGenreFound()
+        {
+            _albumRepositoryMock.Setup(r => r.GetAllAlbumsByGenre("Jazz")).Returns(new List<Album>());
+
+            var result = _albumService.GetAllAlbumsByGenre("Jazz");
+
+            Assert.IsNotNull(result);
+            Assert.IsEmpty(result);
+        }
+        [Test]
+        public void GetAllAlbumsByGenre_ShouldInvokeGetAllAlbumsByGenreOnceFromRepositoryLayer()
+        {
+            var expectedAlbum = new List<Album> { new Album(3, "Back to Black", "Amy Winehouse", "Soul", 2006, 10.99m, 3) };
+            _albumRepositoryMock.Setup(r => r.GetAllAlbumsByGenre("Soul")).Returns(expectedAlbum);
+
+            _albumService.GetAllAlbumsByGenre("Soul");
+
+            _albumRepositoryMock.Verify(r => r.GetAllAlbumsByGenre("Soul"), Times.Once);
+        }
     }
 }
