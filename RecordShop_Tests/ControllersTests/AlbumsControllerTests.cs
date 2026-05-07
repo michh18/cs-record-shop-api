@@ -267,7 +267,7 @@ namespace RecordShop_Tests.ControllersTests
             _albumServicesMock.Verify(s => s.GetAllAlbumsByArtist("Michael Jackson"), Times.Once);
         }
 
-        // ------------------------- GetAllAlbumsByArtist Tests --------------------------------
+        // ------------------------- GetAllAlbumsByReleaseYear Tests --------------------------------
         [Test]
         public void GetAllAlbumsByReleaseYear_ShouldReturnsOkResultWithAlbumsOfCorrectYear_WhenAlbumsExists()
         {
