@@ -74,5 +74,11 @@ namespace RecordShop.Controllers
             var albumsByArtist = _albumsService.GetAllAlbumsByArtist(artistName);
             return Ok(albumsByArtist);
         }
+        [HttpGet("releaseYear/{releaseYear}")]
+        public IActionResult GetAllAlbumsByReleaseYear(int releaseYear) 
+        {
+            var albumsByReleaseYear = _albumsService.GetAllAlbumsByReleaseYear(releaseYear);
+            return Ok(albumsByReleaseYear);
+        }
     }
 }

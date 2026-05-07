@@ -17,15 +17,16 @@ namespace RecordShop_Tests.ServiceTests
         {
             _albumRepositoryMock = new Mock<IAlbumsRepository>();
             _albumService = new AlbumsService(_albumRepositoryMock.Object);
-            _albums = new List<Album>
-            {
-                new Album (1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8 ),
-                new Album (2, "21", "Adele", "Pop", 2011, 9.99m, 10),
-                new Album (3, "Back to Black", "Amy Winehouse", "Soul", 2006, 10.99m, 3),
-                new Album (4, "Abbey Road", "The Beatles", "Rock", 1969, 12.99m, 5),
-                new Album (5, "To Pimp a Butterfly", "Kendrick Lamar", "Hip-Hop", 2015, 13.49m, 4),
-                new Album (6, "25", "Adele", "Pop", 2015, 11.99m, 8)
-            };
+            // example list of Albums 
+            //_albums = new List<Album>
+            //{
+            //    new Album (1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8 ),
+            //    new Album (2, "21", "Adele", "Pop", 2011, 9.99m, 10),
+            //    new Album (3, "Back to Black", "Amy Winehouse", "Soul", 2006, 10.99m, 3),
+            //    new Album (4, "Abbey Road", "The Beatles", "Rock", 1969, 12.99m, 5),
+            //    new Album (5, "To Pimp a Butterfly", "Kendrick Lamar", "Hip-Hop", 2015, 13.49m, 4),
+            //    new Album (6, "25", "Adele", "Pop", 2015, 11.99m, 8)
+            //};
         }
 
         // -------------------------- GetAllAlbums Tests --------------------------------
@@ -220,6 +221,42 @@ namespace RecordShop_Tests.ServiceTests
             _albumService.GetAllAlbumsByArtist("Amy Winehouse");
 
             _albumRepositoryMock.Verify(r => r.GetAllAlbumsByArtist("Amy Winehouse"), Times.Once);
+        }
+        // ----------------------------- GetAllAlbumsByReleaseYear Tests -----------------------
+        [Test]
+        public void GetAllAlbumsByReleaseYear_ShouldReturnAlbumsOfCorrectYear_WhenAlbumsExists()
+        {
+            var expectedAlbums = new List<Album>
+            {
+                new Album(5, "To Pimp a Butterfly", "Kendrick Lamar", "Hip-Hop", 2015, 13.49m, 4),
+                new Album(6, "25", "Adele", "Pop", 2015, 11.99m, 8)
+            };
+            _albumRepositoryMock.Setup(r => r.GetAllAlbumsByReleaseYear(2015)).Returns(expectedAlbums);
+
+            var result = _albumService.GetAllAlbumsByReleaseYear(2015);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(2, result.Count);
+            CollectionAssert.AreEqual(expectedAlbums, result);
+        }
+        [Test]
+        public void GetAllAlbumsByReleaseYear_ShouldReturnEmptyList_WhenNoAlbumsByReleaseYearFound()
+        {
+            _albumRepositoryMock.Setup(r => r.GetAllAlbumsByReleaseYear(2000)).Returns(new List<Album>());
+
+            var result = _albumService.GetAllAlbumsByReleaseYear(2000);
+
+            Assert.IsNotNull(result);
+            Assert.IsEmpty(result);
+        }
+        [Test]
+        public void GetAllAlbumsByReleaseYear_ShouldInvokeGetAllAlbumsByReleaseYearOnceFromRepositoryLayer()
+        {
+            var expectedAlbum = new List<Album> { new Album(3, "Back to Black", "Amy Winehouse", "Soul", 2006, 10.99m, 3) };
+            _albumRepositoryMock.Setup(r => r.GetAllAlbumsByReleaseYear(2006)).Returns(expectedAlbum);
+
+            _albumService.GetAllAlbumsByReleaseYear(2006);
+
+            _albumRepositoryMock.Verify(r => r.GetAllAlbumsByReleaseYear(2006), Times.Once);
         }
     }
 }

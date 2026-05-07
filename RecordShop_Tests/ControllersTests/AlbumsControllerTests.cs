@@ -18,14 +18,6 @@ namespace RecordShop_Tests.ControllersTests
         {
             _albumServicesMock = new Mock<IAlbumsService>();
             _albumController = new AlbumsController(_albumServicesMock.Object);
-            _albums = new List<Album>
-            {
-                new Album (1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8),
-                new Album (2, "21", "Adele", "Pop", 2011, 9.99m, 10),
-                new Album (3, "Back to Black", "Amy Winehouse", "Soul", 2006, 10.99m, 3),
-                new Album (4, "Abbey Road", "The Beatles", "Rock", 1969, 12.99m, 5),
-                new Album (5, "To Pimp a Butterfly", "Kendrick Lamar", "Hip-Hop", 2015, 13.49m, 4)
-            };
         }
 
         // --------------------- GetAllAlbums Tests --------------------------------------
@@ -244,8 +236,7 @@ namespace RecordShop_Tests.ControllersTests
         [Test]
         public void GetAllAlbumsByArtist_ShouldReturnsOkResultWithEmptyAlbumList_WhenNoAlbumsOfArtistExists()
         {
-            var expectedAlbums = new List<Album>();
-            _albumServicesMock.Setup(s => s.GetAllAlbumsByArtist("Drake")).Returns(expectedAlbums);
+            _albumServicesMock.Setup(s => s.GetAllAlbumsByArtist("Drake")).Returns(new List<Album>());
 
             var result = _albumController.GetAllAlbumsByArtist("Drake");
             var okResult = result as OkObjectResult;
@@ -264,6 +255,46 @@ namespace RecordShop_Tests.ControllersTests
             _albumController.GetAllAlbumsByArtist("Michael Jackson");
 
             _albumServicesMock.Verify(s => s.GetAllAlbumsByArtist("Michael Jackson"), Times.Once);
+        }
+
+        // ------------------------- GetAllAlbumsByArtist Tests --------------------------------
+        [Test]
+        public void GetAllAlbumsByReleaseYear_ShouldReturnsOkResultWithAlbumsOfCorrectYear_WhenAlbumsExists()
+        {
+            var expectedAlbums = new List<Album> { new Album(1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8) };
+            _albumServicesMock.Setup(s => s.GetAllAlbumsByReleaseYear(1982)).Returns(expectedAlbums);
+
+            var result = _albumController.GetAllAlbumsByReleaseYear(1982);
+            var okResult = result as OkObjectResult;
+            var albumResults = (List<Album>)okResult.Value;
+
+            Assert.IsInstanceOf<OkObjectResult>(result);
+            Assert.IsNotNull(okResult);
+            CollectionAssert.AreEqual(expectedAlbums, albumResults);
+        }
+        [Test]
+        public void GetAllAlbumsByReleaseYear_ShouldReturnsOkResultWithEmptyAlbumList_WhenNoAlbumsOfReleaseYearExists()
+        {
+            var expectedAlbums = new List<Album>();
+            _albumServicesMock.Setup(s => s.GetAllAlbumsByReleaseYear(2000)).Returns(new List<Album>());
+
+            var result = _albumController.GetAllAlbumsByReleaseYear(2000);
+            var okResult = result as OkObjectResult;
+            var albumResults = (List<Album>)okResult.Value;
+
+            Assert.IsInstanceOf<OkObjectResult>(result);
+            Assert.IsNotNull(okResult);
+            Assert.IsEmpty(albumResults);
+        }
+        [Test]
+        public void GetAllAlbumsByReleaseYear_ShouldInvokeGetAllAlbumsByReleaseYearFromServiceLayer()
+        {
+            var expectedAlbums = new List<Album> { new Album(1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8) };
+            _albumServicesMock.Setup(s => s.GetAllAlbumsByReleaseYear(1982)).Returns(expectedAlbums);
+
+            _albumController.GetAllAlbumsByReleaseYear(1982);
+
+            _albumServicesMock.Verify(s => s.GetAllAlbumsByReleaseYear(1982), Times.Once);
         }
     }
 }
