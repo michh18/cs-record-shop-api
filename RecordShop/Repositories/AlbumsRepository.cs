@@ -9,7 +9,7 @@ namespace RecordShop.Repositories
         public Album AddNewAlbum(Album album);
         public Album UpdateAlbum(int albumId, Album updatedAlbum);
         public bool DeleteAlbumById(int albumId);
-        //public List<Album> GetAllAlbumsByArtist(string artistName);
+        public List<Album> GetAllAlbumsByArtist(string artistName);
         //public List<Album> GetAllAlbumsByReleaseYear(int releaseYear);
         //public List<Album> GetAllAlbumsByGenre(string genre);
 
@@ -66,6 +66,10 @@ namespace RecordShop.Repositories
             _context.Albums.Remove(existingAlbum);
             _context.SaveChanges();
             return true;
+        }
+        public List<Album> GetAllAlbumsByArtist(string artistName) 
+        {
+            return _context.Albums.Where(a => a.Artist.Equals(artistName, StringComparison.OrdinalIgnoreCase)).ToList() ?? new List<Album>();
         }
     }
 }

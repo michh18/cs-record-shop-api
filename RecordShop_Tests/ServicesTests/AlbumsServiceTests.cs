@@ -23,7 +23,8 @@ namespace RecordShop_Tests.ServiceTests
                 new Album (2, "21", "Adele", "Pop", 2011, 9.99m, 10),
                 new Album (3, "Back to Black", "Amy Winehouse", "Soul", 2006, 10.99m, 3),
                 new Album (4, "Abbey Road", "The Beatles", "Rock", 1969, 12.99m, 5),
-                new Album (5, "To Pimp a Butterfly", "Kendrick Lamar", "Hip-Hop", 2015, 13.49m, 4)
+                new Album (5, "To Pimp a Butterfly", "Kendrick Lamar", "Hip-Hop", 2015, 13.49m, 4),
+                new Album (6, "25", "Adele", "Pop", 2015, 11.99m, 8)
             };
         }
 
@@ -183,6 +184,42 @@ namespace RecordShop_Tests.ServiceTests
 
             Assert.IsTrue(result);
             _albumRepositoryMock.Verify(r => r.DeleteAlbumById(4), Times.Once);
+        }
+        // ------------------------- GetAllAlbumsByArtist Tests --------------------------------
+        [Test]
+        public void GetAllAlbumsByArtist_ShouldReturnAlbumsByAdele_WhenAlbumsExists() 
+        {
+            var expectedAlbums = new List<Album>
+            {
+                new Album(2, "21", "Adele", "Pop", 2011, 9.99m, 10),
+                new Album (6, "25", "Adele", "Pop", 2015, 11.99m, 8)
+            };
+            _albumRepositoryMock.Setup(r => r.GetAllAlbumsByArtist("Adele")).Returns(expectedAlbums);
+
+            var result = _albumService.GetAllAlbumsByArtist("Adele");
+            Assert.IsNotNull(result);
+            Assert.AreEqual(2, result.Count);
+            CollectionAssert.AreEqual(expectedAlbums, result);
+        }
+        [Test]
+        public void GetAllAlbumsByArtist_ShouldReturnEmptyList_WhenNoAlbumsByArtistFound() 
+        {
+            _albumRepositoryMock.Setup(r => r.GetAllAlbumsByArtist("Drake")).Returns(new List<Album>());
+
+            var result = _albumService.GetAllAlbumsByArtist("Drake");
+
+            Assert.IsNotNull(result);
+            Assert.IsEmpty(result);
+        }
+        [Test]
+        public void GetAllAlbumsByArtist_ShouldInvokeGetAlbumByIdOnceFromRepositoryLayer()
+        {
+            var expectedAlbum = new List<Album> { new Album(3, "Back to Black", "Amy Winehouse", "Soul", 2006, 10.99m, 3) };
+            _albumRepositoryMock.Setup(r => r.GetAllAlbumsByArtist("Amy Winehouse")).Returns(expectedAlbum);
+
+            _albumService.GetAllAlbumsByArtist("Amy Winehouse");
+
+            _albumRepositoryMock.Verify(r => r.GetAllAlbumsByArtist("Amy Winehouse"), Times.Once);
         }
     }
 }

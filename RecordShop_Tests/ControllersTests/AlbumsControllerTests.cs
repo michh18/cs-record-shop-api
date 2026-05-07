@@ -226,5 +226,44 @@ namespace RecordShop_Tests.ControllersTests
 
             _albumServicesMock.Verify(s => s.DeleteAlbumById(4), Times.Once);
         }
+        // ------------------------- GetAllAlbumsByArtist Tests --------------------------------
+        [Test]
+        public void GetAllAlbumsByArtist_ShouldReturnsOkResultWithAlbums_WhenAlbumsOfArtistExists() 
+        {
+            var expectedAlbums = new List<Album> { new Album(1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8) };
+            _albumServicesMock.Setup(s => s.GetAllAlbumsByArtist("Michael Jackson")).Returns(expectedAlbums);
+
+            var result = _albumController.GetAllAlbumsByArtist("Michael Jackson");
+            var okResult = result as OkObjectResult;
+            var albumResults = (List<Album>)okResult.Value;
+
+            Assert.IsInstanceOf<OkObjectResult>(result);
+            Assert.IsNotNull(okResult);
+            CollectionAssert.AreEqual(expectedAlbums, albumResults);
+        }
+        [Test]
+        public void GetAllAlbumsByArtist_ShouldReturnsOkResultWithEmptyAlbumList_WhenNoAlbumsOfArtistExists()
+        {
+            var expectedAlbums = new List<Album>();
+            _albumServicesMock.Setup(s => s.GetAllAlbumsByArtist("Drake")).Returns(expectedAlbums);
+
+            var result = _albumController.GetAllAlbumsByArtist("Drake");
+            var okResult = result as OkObjectResult;
+            var albumResults = (List<Album>)okResult.Value;
+
+            Assert.IsInstanceOf<OkObjectResult>(result);
+            Assert.IsNotNull(okResult);
+            Assert.IsEmpty(albumResults);
+        }
+        [Test]
+        public void GetAllAlbumsByArtist_ShouldInvokeGetAllAlbumsByArtistFromServiceLayer()
+        {
+            var expectedAlbums = new List<Album> { new Album(1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8) };
+            _albumServicesMock.Setup(s => s.GetAllAlbumsByArtist("Michael Jackson")).Returns(expectedAlbums);
+
+            _albumController.GetAllAlbumsByArtist("Michael Jackson");
+
+            _albumServicesMock.Verify(s => s.GetAllAlbumsByArtist("Michael Jackson"), Times.Once);
+        }
     }
 }

@@ -68,5 +68,11 @@ namespace RecordShop.Controllers
             var deleted = _albumsService.DeleteAlbumById(albumId);
             return deleted ? NoContent() : NotFound("Album not found");
         }
+        [HttpGet("artist/{artistName}")]
+        public IActionResult GetAllAlbumsByArtist(string artistName) 
+        { 
+            var albumsByArtist = _albumsService.GetAllAlbumsByArtist(artistName);
+            return Ok(albumsByArtist);
+        }
     }
 }

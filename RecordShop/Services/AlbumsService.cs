@@ -1,4 +1,5 @@
-﻿using RecordShop.DataModels;
+﻿using Microsoft.EntityFrameworkCore.Query;
+using RecordShop.DataModels;
 using RecordShop.Repositories;
 
 namespace RecordShop.Services
@@ -10,6 +11,7 @@ namespace RecordShop.Services
         public Album AddNewAlbum(Album newAlbum);
         public Album UpdateAlbum(int albumId, Album updatedAlbum);
         public bool DeleteAlbumById(int albumId);
+        public List<Album> GetAllAlbumsByArtist(string artistName);
 
     }
 
@@ -39,6 +41,10 @@ namespace RecordShop.Services
         public bool DeleteAlbumById(int albumId) 
         {
             return _albumsRepository.DeleteAlbumById(albumId);
+        }
+        public List<Album> GetAllAlbumsByArtist(string artistName) 
+        {
+            return _albumsRepository.GetAllAlbumsByArtist(artistName);
         }
     }
 }
