@@ -18,15 +18,15 @@ namespace RecordShop_Tests.ServiceTests
             _albumRepositoryMock = new Mock<IAlbumsRepository>();
             _albumService = new AlbumsService(_albumRepositoryMock.Object);
             // example list of Albums 
-            //_albums = new List<Album>
-            //{
-            //    new Album (1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8 ),
-            //    new Album (2, "21", "Adele", "Pop", 2011, 9.99m, 10),
-            //    new Album (3, "Back to Black", "Amy Winehouse", "Soul", 2006, 10.99m, 3),
-            //    new Album (4, "Abbey Road", "The Beatles", "Rock", 1969, 12.99m, 5),
-            //    new Album (5, "To Pimp a Butterfly", "Kendrick Lamar", "Hip-Hop", 2015, 13.49m, 4),
-            //    new Album (6, "25", "Adele", "Pop", 2015, 11.99m, 8)
-            //};
+            _albums = new List<Album>
+            {
+                new Album (1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8 ),
+                new Album (2, "21", "Adele", "Pop", 2011, 9.99m, 10),
+                new Album (3, "Back to Black", "Amy Winehouse", "Soul", 2006, 10.99m, 3),
+                new Album (4, "Abbey Road", "The Beatles", "Rock", 1969, 12.99m, 5),
+                new Album (5, "To Pimp a Butterfly", "Kendrick Lamar", "Hip-Hop", 2015, 13.49m, 4),
+                new Album (6, "25", "Adele", "Pop", 2015, 11.99m, 8)
+            };
         }
 
         // -------------------------- GetAllAlbums Tests --------------------------------

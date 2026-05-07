@@ -18,6 +18,16 @@ namespace RecordShop_Tests.ControllersTests
         {
             _albumServicesMock = new Mock<IAlbumsService>();
             _albumController = new AlbumsController(_albumServicesMock.Object);
+            // example list of Albums 
+            _albums = new List<Album>
+            {
+                new Album (1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8 ),
+                new Album (2, "21", "Adele", "Pop", 2011, 9.99m, 10),
+                new Album (3, "Back to Black", "Amy Winehouse", "Soul", 2006, 10.99m, 3),
+                new Album (4, "Abbey Road", "The Beatles", "Rock", 1969, 12.99m, 5),
+                new Album (5, "To Pimp a Butterfly", "Kendrick Lamar", "Hip-Hop", 2015, 13.49m, 4),
+                new Album (6, "25", "Adele", "Pop", 2015, 11.99m, 8)
+            };
         }
 
         // --------------------- GetAllAlbums Tests --------------------------------------
@@ -33,7 +43,7 @@ namespace RecordShop_Tests.ControllersTests
             Assert.IsInstanceOf<OkObjectResult>(result);
             Assert.IsNotNull(okResult);
             Assert.IsNotNull(returnedAlbums);
-            Assert.That(returnedAlbums.Count(), Is.EqualTo(5));
+            Assert.That(returnedAlbums.Count(), Is.EqualTo(6));
         }
         [Test]
         public void GetAllAlbums_ShouldInvokeGetAllAlbumsFromServiceLayer()
