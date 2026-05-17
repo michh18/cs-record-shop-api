@@ -4,10 +4,6 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace RecordShop
 {
-    // Source - https://stackoverflow.com/a/76481253
-    // Posted by mostafa, modified by community. See post 'Timeline' for change history
-    // Retrieved 2026-05-06, License - CC BY-SA 4.0
-
     public class DbContextHealthCheck<TContext> : IHealthCheck where TContext : DbContext
     {
         private readonly TContext _dbContext;
@@ -23,8 +19,14 @@ namespace RecordShop
         {
             try
             {
-                await _dbContext.Database.CanConnectAsync(cancellationToken);
-                return HealthCheckResult.Healthy();
+                var canConnect = await _dbContext.Database.CanConnectAsync(cancellationToken);
+
+                if (canConnect)
+                {
+                    return HealthCheckResult.Healthy();
+                }
+
+                return HealthCheckResult.Unhealthy("Database connection could not be established.");
             }
             catch (Exception ex)
             {
