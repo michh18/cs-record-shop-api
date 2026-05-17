@@ -27,7 +27,7 @@ namespace RecordShop.Repositories
         }
         public Album GetAlbumById(int albumId)
         {
-            return _context.Albums.FirstOrDefault(a => a.AlbumId == albumId) ?? null;
+            return _context.Albums.FirstOrDefault(a => a.AlbumId == albumId);
         }
         public Album AddNewAlbum(Album newAlbum) 
         {
@@ -69,15 +69,15 @@ namespace RecordShop.Repositories
         }
         public List<Album> GetAllAlbumsByArtist(string artistName) 
         {
-            return _context.Albums.Where(a => a.Artist.Equals(artistName, StringComparison.OrdinalIgnoreCase)).ToList() ?? new List<Album>();
+            return _context.Albums.Where(a => a.Artist.Equals(artistName, StringComparison.OrdinalIgnoreCase)).ToList();
         }
         public List<Album> GetAllAlbumsByReleaseYear(int releaseYear) 
         {
-            return _context.Albums.Where(a => a.ReleaseYear == releaseYear).ToList() ?? new List<Album>();
+            return _context.Albums.Where(a => a.ReleaseYear == releaseYear).ToList();
         }
         public List<Album> GetAllAlbumsByGenre(string genre)
         {
-            return _context.Albums.Where(a => a.Genre.Equals(genre, StringComparison.OrdinalIgnoreCase)).ToList() ?? new List<Album>();
+            return _context.Albums.Where(a => a.Genre.Equals(genre, StringComparison.OrdinalIgnoreCase)).ToList();
         }
     }
 }
