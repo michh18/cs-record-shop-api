@@ -21,12 +21,12 @@ namespace RecordShop_Tests.ControllersTests
             // example list of Albums 
             _albums = new List<Album>
             {
-                new Album (1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8 ),
-                new Album (2, "21", "Adele", "Pop", 2011, 9.99m, 10),
-                new Album (3, "Back to Black", "Amy Winehouse", "Soul", 2006, 10.99m, 3),
-                new Album (4, "Abbey Road", "The Beatles", "Rock", 1969, 12.99m, 5),
-                new Album (5, "To Pimp a Butterfly", "Kendrick Lamar", "Hip-Hop", 2015, 13.49m, 4),
-                new Album (6, "25", "Adele", "Pop", 2015, 11.99m, 8)
+                new Album (1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8 , "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw"),
+                new Album (2, "21", "Adele", "Pop", 2011, 9.99m, 10, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw"),
+                new Album (3, "Back to Black", "Amy Winehouse", "Soul", 2006, 10.99m, 3, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw"),
+                new Album (4, "Abbey Road", "The Beatles", "Rock", 1969, 12.99m, 5, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw"),
+                new Album (5, "To Pimp a Butterfly", "Kendrick Lamar", "Hip-Hop", 2015, 13.49m, 4, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw"),
+                new Album (6, "25", "Adele", "Pop", 2015, 11.99m, 8, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw")
             };
         }
 
@@ -59,7 +59,7 @@ namespace RecordShop_Tests.ControllersTests
         [Test]
         public void GetAlbumById_ReturnsOkResultWithAlbum_WhenAlbumExists()
         {
-            var album = new Album (1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8);
+            var album = new Album (1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw");
             _albumServicesMock.Setup(s => s.GetAlbumById(1)).Returns(album);
 
             var result = _albumController.GetAlbumById(1);
@@ -92,7 +92,7 @@ namespace RecordShop_Tests.ControllersTests
         [Test]
         public void PostNewAlbum_ReturnsCreatedAtActionResultWithAlbum()
         {
-            var newAlbum = new Album (3, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8);
+            var newAlbum = new Album (3, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw");
             _albumServicesMock.Setup(s => s.AddNewAlbum(newAlbum)).Returns(newAlbum);
 
             var result = _albumController.PostNewAlbum(newAlbum);
@@ -115,7 +115,7 @@ namespace RecordShop_Tests.ControllersTests
         [Test]
         public void PostNewAlbum_ReturnsBadRequest_WhenSomeAlbumInfoIsInvalid()
         {
-            Album badAlbum = new Album (7, " ", " ", " ", 1982, 11.99m, 8);
+            Album badAlbum = new Album (7, " ", " ", " ", 1982, 11.99m, 8, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw");
 
             var result = _albumController.PostNewAlbum(badAlbum);
 
@@ -125,7 +125,7 @@ namespace RecordShop_Tests.ControllersTests
         [Test]
         public void PostNewAlbum_ShouldInvokeAddNewAlbumFromServiceLayer()
         {
-            var newAlbum = new Album (1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8);
+            var newAlbum = new Album (1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw");
             _albumServicesMock.Setup(s => s.AddNewAlbum(newAlbum)).Returns(newAlbum);
 
             _albumController.PostNewAlbum(newAlbum);
@@ -136,7 +136,7 @@ namespace RecordShop_Tests.ControllersTests
         [Test]
         public void UpdateAlbum_ReturnsOkResultWithUpdatedAlbum() 
         {
-            var updatedAlbum = new Album (4, "Rumours", "Fleetwood Mac", "Rock", 1977, 10.49m, 7);
+            var updatedAlbum = new Album (4, "Rumours", "Fleetwood Mac", "Rock", 1977, 10.49m, 7, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw");
             
             _albumServicesMock.Setup(s => s.UpdateAlbum(4, updatedAlbum)).Returns(updatedAlbum);
 
@@ -162,7 +162,7 @@ namespace RecordShop_Tests.ControllersTests
         [Test]
         public void UpdateAlbum_ReturnsBadRequest_WhenAlbumIsInvalid()
         {
-            var updatedAlbum = new Album (4, " ", "Fleetwood Mac", "Rock", 1977, 10.49m, 7);
+            var updatedAlbum = new Album (4, " ", "Fleetwood Mac", "Rock", 1977, 10.49m, 7, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw");
 
             var result = _albumController.UpdateAlbum(4, updatedAlbum);
 
@@ -175,7 +175,7 @@ namespace RecordShop_Tests.ControllersTests
         [Test]
         public void UpdateAlbum_ReturnsBadRequest_WhenAlbumIsNotFound()
         {
-            var updatedAlbum = new Album (4, "Rumours", "Fleetwood Mac", "Rock", 1977, 10.49m, 7);
+            var updatedAlbum = new Album (4, "Rumours", "Fleetwood Mac", "Rock", 1977, 10.49m, 7, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw");
 
             _albumServicesMock.Setup(s => s.UpdateAlbum(4, updatedAlbum)).Returns((Album)null);
             var result = _albumController.UpdateAlbum(4, updatedAlbum);
@@ -188,7 +188,7 @@ namespace RecordShop_Tests.ControllersTests
         [Test]
         public void UpdatedAlbum_ShouldInvokeUpdateAlbumFromServiceLayer()
         {
-            var updatedAlbum = new Album (4,"Rumours", "Fleetwood Mac", "Rock", 1977, 10.49m, 7);
+            var updatedAlbum = new Album (4,"Rumours", "Fleetwood Mac", "Rock", 1977, 10.49m, 7, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw");
             _albumServicesMock.Setup(s => s.UpdateAlbum(4, updatedAlbum)).Returns(updatedAlbum);
 
             _albumController.UpdateAlbum(4, updatedAlbum);
@@ -232,7 +232,7 @@ namespace RecordShop_Tests.ControllersTests
         [Test]
         public void GetAllAlbumsByArtist_ShouldReturnsOkResultWithAlbums_WhenAlbumsOfArtistExists() 
         {
-            var expectedAlbums = new List<Album> { new Album(1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8) };
+            var expectedAlbums = new List<Album> { new Album(1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw") };
             _albumServicesMock.Setup(s => s.GetAllAlbumsByArtist("Michael Jackson")).Returns(expectedAlbums);
 
             var result = _albumController.GetAllAlbumsByArtist("Michael Jackson");
@@ -259,7 +259,7 @@ namespace RecordShop_Tests.ControllersTests
         [Test]
         public void GetAllAlbumsByArtist_ShouldInvokeGetAllAlbumsByArtistFromServiceLayer()
         {
-            var expectedAlbums = new List<Album> { new Album(1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8) };
+            var expectedAlbums = new List<Album> { new Album(1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw") };
             _albumServicesMock.Setup(s => s.GetAllAlbumsByArtist("Michael Jackson")).Returns(expectedAlbums);
 
             _albumController.GetAllAlbumsByArtist("Michael Jackson");
@@ -271,7 +271,7 @@ namespace RecordShop_Tests.ControllersTests
         [Test]
         public void GetAllAlbumsByReleaseYear_ShouldReturnsOkResultWithAlbumsOfCorrectYear_WhenAlbumsExists()
         {
-            var expectedAlbums = new List<Album> { new Album(1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8) };
+            var expectedAlbums = new List<Album> { new Album(1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw") };
             _albumServicesMock.Setup(s => s.GetAllAlbumsByReleaseYear(1982)).Returns(expectedAlbums);
 
             var result = _albumController.GetAllAlbumsByReleaseYear(1982);
@@ -298,7 +298,7 @@ namespace RecordShop_Tests.ControllersTests
         [Test]
         public void GetAllAlbumsByReleaseYear_ShouldInvokeGetAllAlbumsByReleaseYearFromServiceLayer()
         {
-            var expectedAlbums = new List<Album> { new Album(1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8) };
+            var expectedAlbums = new List<Album> { new Album(1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw") };
             _albumServicesMock.Setup(s => s.GetAllAlbumsByReleaseYear(1982)).Returns(expectedAlbums);
 
             _albumController.GetAllAlbumsByReleaseYear(1982);
@@ -309,7 +309,7 @@ namespace RecordShop_Tests.ControllersTests
         [Test]
         public void GetAllAlbumsByGenre_ShouldReturnsOkResultWithAlbumsOfCorrectGenre_WhenAlbumsExists()
         {
-            var expectedAlbums = new List<Album> { new Album(5, "To Pimp a Butterfly", "Kendrick Lamar", "Hip-Hop", 2015, 13.49m, 4) };
+            var expectedAlbums = new List<Album> { new Album(5, "To Pimp a Butterfly", "Kendrick Lamar", "Hip-Hop", 2015, 13.49m, 4, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw") };
             _albumServicesMock.Setup(s => s.GetAllAlbumsByGenre("Hip-Hop")).Returns(expectedAlbums);
 
             var result = _albumController.GetAllAlbumsByGenre("Hip-Hop");
@@ -336,7 +336,7 @@ namespace RecordShop_Tests.ControllersTests
         [Test]
         public void GetAllAlbumsByGenre_ShouldInvokeGetAllAlbumsByGenreFromServiceLayer()
         {
-            var expectedAlbums = new List<Album> { new Album(5, "To Pimp a Butterfly", "Kendrick Lamar", "Hip-Hop", 2015, 13.49m, 4) };
+            var expectedAlbums = new List<Album> { new Album(5, "To Pimp a Butterfly", "Kendrick Lamar", "Hip-Hop", 2015, 13.49m, 4, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw") };
             _albumServicesMock.Setup(s => s.GetAllAlbumsByGenre("Hip-Hop")).Returns(expectedAlbums);
 
             _albumController.GetAllAlbumsByGenre("Hip-Hop");

@@ -20,12 +20,12 @@ namespace RecordShop_Tests.ServiceTests
             // example list of Albums 
             _albums = new List<Album>
             {
-                new Album (1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8 ),
-                new Album (2, "21", "Adele", "Pop", 2011, 9.99m, 10),
-                new Album (3, "Back to Black", "Amy Winehouse", "Soul", 2006, 10.99m, 3),
-                new Album (4, "Abbey Road", "The Beatles", "Rock", 1969, 12.99m, 5),
-                new Album (5, "To Pimp a Butterfly", "Kendrick Lamar", "Hip-Hop", 2015, 13.49m, 4),
-                new Album (6, "25", "Adele", "Pop", 2015, 11.99m, 8)
+                new Album (1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw"),
+                new Album (2, "21", "Adele", "Pop", 2011, 9.99m, 10, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw"),
+                new Album (3, "Back to Black", "Amy Winehouse", "Soul", 2006, 10.99m, 3, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw"),
+                new Album (4, "Abbey Road", "The Beatles", "Rock", 1969, 12.99m, 5, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw"),
+                new Album (5, "To Pimp a Butterfly", "Kendrick Lamar", "Hip-Hop", 2015, 13.49m, 4, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw"),
+                new Album (6, "25", "Adele", "Pop", 2015, 11.99m, 8, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw")
             };
         }
 
@@ -62,7 +62,7 @@ namespace RecordShop_Tests.ServiceTests
         [Test]
         public void GetAlbumById_ShouldReturnAlbum_WhenAlbumExists()
         {
-            var expectedAlbum = new Album (2, "21", "Adele", "Pop", 2011, 9.99m, 10);
+            var expectedAlbum = new Album (2, "21", "Adele", "Pop", 2011, 9.99m, 10, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw");
             _albumRepositoryMock.Setup(r => r.GetAlbumById(2)).Returns(expectedAlbum);
 
             var result = _albumService.GetAlbumById(2);
@@ -91,7 +91,7 @@ namespace RecordShop_Tests.ServiceTests
         [Test]
         public void GetAlbumById_ShouldInvokeGetAlbumByIdOnceFromRepositoryLayer()
         {
-            var expectedAlbum = new Album (2, "21", "Adele", "Pop", 2011, 9.99m, 10);
+            var expectedAlbum = new Album (2, "21", "Adele", "Pop", 2011, 9.99m, 10, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw");
             _albumRepositoryMock.Setup(r => r.GetAlbumById(2)).Returns(expectedAlbum);
 
             _albumService.GetAlbumById(2);
@@ -103,7 +103,7 @@ namespace RecordShop_Tests.ServiceTests
         [Test]
         public void AddNewAlbum_ShouldReturnAlbum_WhenNotNull()
         {
-            var newAlbum = new Album (1,"Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8);
+            var newAlbum = new Album (1,"Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw");
             _albumRepositoryMock.Setup(r => r.AddNewAlbum(newAlbum)).Returns(newAlbum);
 
             var result = _albumService.AddNewAlbum(newAlbum);
@@ -124,7 +124,7 @@ namespace RecordShop_Tests.ServiceTests
         [Test]
         public void AddNewAlbum_ShouldInvokeAddNewAlbumOnceFromRepositoryLayer()
         {
-            var newAlbum = new Album (2, "21", "Adele", "Pop", 2011, 9.99m, 10);
+            var newAlbum = new Album (2, "21", "Adele", "Pop", 2011, 9.99m, 10, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw");
             _albumRepositoryMock.Setup(r => r.AddNewAlbum(newAlbum)).Returns(newAlbum);
 
             _albumService.AddNewAlbum(newAlbum);
@@ -135,7 +135,7 @@ namespace RecordShop_Tests.ServiceTests
         [Test]
         public void UpdateAlbum_UpdatesAllFields_WhenAlbumExists()
         {
-            var updated = new Album (4, "Rumours", "Fleetwood Mac", "Rock", 1977, 10.49m, 7);
+            var updated = new Album (4, "Rumours", "Fleetwood Mac", "Rock", 1977, 10.49m, 7, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw");
 
             _albumRepositoryMock.Setup(r => r.UpdateAlbum(4, updated)).Returns(updated);
 
@@ -154,9 +154,9 @@ namespace RecordShop_Tests.ServiceTests
         [Test]
         public void UpdateAlbum_DoesNotUpdate_WhenAlbumDoesNotExists()
         {
-            var updated = new Album (4, "Rumours", "Fleetwood Mac", "Rock", 1977, 10.49m, 7);
+            var updated = new Album (4, "Rumours", "Fleetwood Mac", "Rock", 1977, 10.49m, 7, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw");
 
-            _albumRepositoryMock.Setup(r => r.GetAlbumById(6)).Returns((Album)null);
+            _albumRepositoryMock.Setup(r => r.UpdateAlbum(6, updated)).Returns((Album)null);
 
             var result = _albumService.UpdateAlbum(6, updated);
 
@@ -165,7 +165,7 @@ namespace RecordShop_Tests.ServiceTests
         [Test]
         public void UpdatedAlbum_ShouldInvokeUpdateAlbumFromRepositoryLayer()
         {
-            var updatedAlbum = new Album (4, "Rumours", "Fleetwood Mac", "Rock", 1977, 10.49m, 7);
+            var updatedAlbum = new Album (4, "Rumours", "Fleetwood Mac", "Rock", 1977, 10.49m, 7, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw");
             _albumRepositoryMock.Setup(r => r.UpdateAlbum(4, updatedAlbum)).Returns(updatedAlbum);
 
             _albumService.UpdateAlbum(4, updatedAlbum);
@@ -176,7 +176,7 @@ namespace RecordShop_Tests.ServiceTests
         [Test]
         public void DeleteAlbumById_ReturnsTrue_WhenAlbumExists()
         {
-            var album = new Album(4, "Rumours", "Fleetwood Mac", "Rock", 1977, 10.49m, 7);
+            var album = new Album(4, "Rumours", "Fleetwood Mac", "Rock", 1977, 10.49m, 7, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw");
 
             _albumRepositoryMock.Setup(r => r.GetAlbumById(4)).Returns(album);
             _albumRepositoryMock.Setup(r => r.DeleteAlbumById(album.AlbumId)).Returns(true);
@@ -192,8 +192,8 @@ namespace RecordShop_Tests.ServiceTests
         {
             var expectedAlbums = new List<Album>
             {
-                new Album(2, "21", "Adele", "Pop", 2011, 9.99m, 10),
-                new Album (6, "25", "Adele", "Pop", 2015, 11.99m, 8)
+                new Album(2, "21", "Adele", "Pop", 2011, 9.99m, 10, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw"),
+                new Album (6, "25", "Adele", "Pop", 2015, 11.99m, 8, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw")
             };
             _albumRepositoryMock.Setup(r => r.GetAllAlbumsByArtist("Adele")).Returns(expectedAlbums);
 
@@ -209,13 +209,12 @@ namespace RecordShop_Tests.ServiceTests
 
             var result = _albumService.GetAllAlbumsByArtist("Drake");
 
-            Assert.IsNotNull(result);
-            Assert.IsEmpty(result);
+            Assert.That(result, Is.Empty);
         }
         [Test]
         public void GetAllAlbumsByArtist_ShouldInvokeGetAlbumByIdOnceFromRepositoryLayer()
         {
-            var expectedAlbum = new List<Album> { new Album(3, "Back to Black", "Amy Winehouse", "Soul", 2006, 10.99m, 3) };
+            var expectedAlbum = new List<Album> { new Album(3, "Back to Black", "Amy Winehouse", "Soul", 2006, 10.99m, 3, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw") };
             _albumRepositoryMock.Setup(r => r.GetAllAlbumsByArtist("Amy Winehouse")).Returns(expectedAlbum);
 
             _albumService.GetAllAlbumsByArtist("Amy Winehouse");
@@ -228,8 +227,8 @@ namespace RecordShop_Tests.ServiceTests
         {
             var expectedAlbums = new List<Album>
             {
-                new Album(5, "To Pimp a Butterfly", "Kendrick Lamar", "Hip-Hop", 2015, 13.49m, 4),
-                new Album(6, "25", "Adele", "Pop", 2015, 11.99m, 8)
+                new Album(5, "To Pimp a Butterfly", "Kendrick Lamar", "Hip-Hop", 2015, 13.49m, 4, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw"),
+                new Album(6, "25", "Adele", "Pop", 2015, 11.99m, 8, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw")
             };
             _albumRepositoryMock.Setup(r => r.GetAllAlbumsByReleaseYear(2015)).Returns(expectedAlbums);
 
@@ -245,13 +244,12 @@ namespace RecordShop_Tests.ServiceTests
 
             var result = _albumService.GetAllAlbumsByReleaseYear(2000);
 
-            Assert.IsNotNull(result);
-            Assert.IsEmpty(result);
+            Assert.That(result, Is.Empty);
         }
         [Test]
         public void GetAllAlbumsByReleaseYear_ShouldInvokeGetAllAlbumsByReleaseYearOnceFromRepositoryLayer()
         {
-            var expectedAlbum = new List<Album> { new Album(3, "Back to Black", "Amy Winehouse", "Soul", 2006, 10.99m, 3) };
+            var expectedAlbum = new List<Album> { new Album(3, "Back to Black", "Amy Winehouse", "Soul", 2006, 10.99m, 3, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw") };
             _albumRepositoryMock.Setup(r => r.GetAllAlbumsByReleaseYear(2006)).Returns(expectedAlbum);
 
             _albumService.GetAllAlbumsByReleaseYear(2006);
@@ -264,9 +262,9 @@ namespace RecordShop_Tests.ServiceTests
         {
             var expectedAlbums = new List<Album>
             {
-                new Album (1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8 ),
-                new Album (2, "21", "Adele", "Pop", 2011, 9.99m, 10),
-                new Album (6, "25", "Adele", "Pop", 2015, 11.99m, 8)
+                new Album (1, "Thriller", "Michael Jackson", "Pop", 1982, 11.99m, 8 , "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw"),
+                new Album (2, "21", "Adele", "Pop", 2011, 9.99m, 10, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw"),
+                new Album (6, "25", "Adele", "Pop", 2015, 11.99m, 8, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw")
             };
             _albumRepositoryMock.Setup(r => r.GetAllAlbumsByGenre("Pop")).Returns(expectedAlbums);
 
@@ -282,13 +280,12 @@ namespace RecordShop_Tests.ServiceTests
 
             var result = _albumService.GetAllAlbumsByGenre("Jazz");
 
-            Assert.IsNotNull(result);
-            Assert.IsEmpty(result);
+            Assert.That(result, Is.Empty);
         }
         [Test]
         public void GetAllAlbumsByGenre_ShouldInvokeGetAllAlbumsByGenreOnceFromRepositoryLayer()
         {
-            var expectedAlbum = new List<Album> { new Album(3, "Back to Black", "Amy Winehouse", "Soul", 2006, 10.99m, 3) };
+            var expectedAlbum = new List<Album> { new Album(3, "Back to Black", "Amy Winehouse", "Soul", 2006, 10.99m, 3, "https://unsplash.com/photos/black-and-blue-vinyl-record-SssdoXhhtJw") };
             _albumRepositoryMock.Setup(r => r.GetAllAlbumsByGenre("Soul")).Returns(expectedAlbum);
 
             _albumService.GetAllAlbumsByGenre("Soul");
