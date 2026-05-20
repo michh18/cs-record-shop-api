@@ -12,7 +12,8 @@ namespace RecordShop.DataModels
         public int ReleaseYear { get; set; }
         public decimal Price { get; set; }
         public int StockQuantity { get; set; }
-        public Album(int albumId, string title, string artist, string genre, int releaseYear, decimal price, int stockQuantity) 
+        public string ImageUrl { get; set; } = "";
+        public Album(int albumId, string title, string artist, string genre, int releaseYear, decimal price, int stockQuantity, string imageUrl) 
         {
             AlbumId = albumId;
             Title = title;
@@ -21,6 +22,7 @@ namespace RecordShop.DataModels
             ReleaseYear = releaseYear;
             Price = price;
             StockQuantity = stockQuantity;
+            ImageUrl = imageUrl;
         }
     }
 }
