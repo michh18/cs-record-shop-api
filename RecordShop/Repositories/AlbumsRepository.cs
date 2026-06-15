@@ -31,10 +31,6 @@ namespace RecordShop.Repositories
         }
         public Album AddNewAlbum(Album newAlbum) 
         {
-            // for development only: 
-            //int newAlbumId = _context.Albums.Any() ? _context.Albums.Max(a => a.AlbumId) + 1 : 1;
-            //newAlbum.AlbumId = newAlbumId;
-
             _context.Albums.Add(newAlbum);
             _context.SaveChanges();
             return newAlbum;
