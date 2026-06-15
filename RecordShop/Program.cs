@@ -24,7 +24,6 @@ namespace RecordShop
             builder.Services.AddScoped<IAlbumsRepository, AlbumsRepository>();
             builder.Services.AddScoped<IAlbumsService, AlbumsService>();
 
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -32,12 +31,11 @@ namespace RecordShop
             app.UseRouting();
             app.MapHealthChecks("/api/health");
 
-            // Configure the HTTP request pipeline.
-            //if (app.Environment.IsDevelopment())
-            //{
-            app.UseSwagger();
-            app.UseSwaggerUI();
-            //}
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
 
             app.UseHttpsRedirection();
 
