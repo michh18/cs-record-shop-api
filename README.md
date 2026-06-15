@@ -1,7 +1,7 @@
 ﻿﻿# Northcoders Record Shop API
 ---
 ## 📌 Overview
-The Northcoders Record Shop is (currently) a backend system designed to modernise the inventory management 
+The Northcoders Record Shop is a full-stack program designed to modernise the inventory management 
 of a fictional record store.
 
 Previously, the store relied on writing down any new stock and sales on paper, which lead to inconsistencies
